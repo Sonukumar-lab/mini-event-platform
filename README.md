@@ -4,7 +4,7 @@
 
 This is a full‑stack **Mini Event Platform** built using the **MERN stack (MongoDB, Express.js, React.js, Node.js)**. The application allows users to create events, view upcoming events, and RSVP (join/leave) events while strictly enforcing capacity limits and handling concurrent requests safely.
 
-The project was developed as part of the **Full Stack Developer Intern – Technical Screening Assignment**.
+The project was developed as part of the **Full Stack Developer Intern**.
 
 ---
 
@@ -129,7 +129,7 @@ root
 ### Clone Repository
 
 ```bash
-git clone <GITHUB_REPO_URL>
+git clone https://github.com/Sonukumar-lab/mini-event-platform
 ```
 
 ### Backend Setup
@@ -174,7 +174,3 @@ npm start
 ## Author
 
 Developed by **Sonu Kumar**
-
----
-
-This project satisfies all **mandatory requirements** and includes multiple **optional enhancements** for bonus evaluation.
