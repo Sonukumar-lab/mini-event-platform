@@ -1,16 +1,26 @@
 const Event = require("../models/Event");
+const cloudinary = require("../config/cloudinary");
 
 /* ================= CREATE EVENT ================= */
 exports.createEvent = async (req, res) => {
   try {
+    let imageUrl = null;
+
+    if (req.file) {
+      const result = await cloudinary.uploader.upload(req.file.path, {
+        folder: "mini-event",
+      });
+      imageUrl = result.secure_url;
+    }
+
     const event = new Event({
       title: req.body.title,
       description: req.body.description,
-      date: new Date(req.body.date), 
+      date: new Date(req.body.date),
       location: req.body.location,
       capacity: req.body.capacity,
       createdBy: req.user.id,
-      image: req.file ? `/uploads/${req.file.filename}` : null
+      image: imageUrl,
     });
 
     await event.save();
@@ -61,7 +71,10 @@ exports.updateEvent = async (req, res) => {
     Object.assign(event, req.body);
 
     if (req.file) {
-      event.image = `/uploads/${req.file.filename}`;
+      const result = await cloudinary.uploader.upload(req.file.path, {
+        folder: "mini-event",
+      });
+      event.image = result.secure_url;
     }
 
     await event.save();
