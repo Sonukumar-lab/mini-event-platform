@@ -2,28 +2,30 @@
 
 ## Project Overview
 
-This is a full‑stack **Mini Event Platform** built using the **MERN stack (MongoDB, Express.js, React.js, Node.js)**. The application allows users to create events, view upcoming events, and RSVP (join/leave) events while strictly enforcing capacity limits and handling concurrent requests safely.
+This is a full-stack **Mini Event Platform** built using the **MERN stack (MongoDB, Express.js, React.js, Node.js)**. The application allows users to create events, browse upcoming events, upload event images, and RSVP (join/leave) events while strictly enforcing capacity limits and core business rules.
 
-The project was developed as part of the **Full Stack Developer Intern**.
+The project is fully deployed and publicly accessible, following real-world full-stack development practices.  
+It was developed as part of a **Full Stack Developer Intern**.
 
 ---
 
 ## Live Deployment
 
-* **Frontend (React):** <YOUR_FRONTEND_URL>
-* **Backend (Node/Express):** <YOUR_BACKEND_URL>
-* **Database:** MongoDB Atlas
+* **Frontend (React – Vercel):** https://mini-event-app.vercel.app  
+* **Backend (Node/Express – Render):** https://mini-event-backend-ujlp.onrender.com/api  
+* **Database:** MongoDB Atlas  
 
 ---
 
-##  Tech Stack
+## Tech Stack
 
 ### Frontend
 
-* React.js
-* React Router
+* React.js (Vite)
+* React Router DOM
 * Axios
-* CSS (Responsive Design)
+* Custom CSS (Responsive Design)
+* Deployment: Vercel
 
 ### Backend
 
@@ -31,53 +33,64 @@ The project was developed as part of the **Full Stack Developer Intern**.
 * Express.js
 * MongoDB + Mongoose
 * JWT Authentication
+* Multer
+* Cloudinary
+* Deployment: Render
 
 ---
 
 ## Authentication & Security
 
 * User Sign Up & Login implemented using **JWT (JSON Web Tokens)**
-* Protected routes for creating, editing, deleting events
+* Protected routes for authenticated users
 * Only event creators can edit or delete their own events
+* Secure access control enforced on backend APIs
 
 ---
 
-##  Event Management Features
+## Event Management Features
 
 Authenticated users can:
 
 * Create events with:
-
   * Title
   * Description
   * Date & Time
   * Location
   * Capacity
-  * Image Upload
-* View all upcoming events on the dashboard
-* Edit/Delete only events created by them
-* View full event details with image and attendee list
+  * Image Upload (Cloudinary)
+* View all upcoming events
+* View detailed event pages
+* Edit or delete only events created by them
 
 ---
 
-## RSVP System (Capacity & Concurrency Handling)
+## RSVP Capacity & Concurrency Handling
 
-### Business Rules Implemented
+To prevent overbooking during simultaneous RSVP requests, the backend uses
+atomic MongoDB update operations.
 
-* A user can join an event only once
-* Event creators cannot RSVP to their own events
-* Event capacity is strictly enforced
-* Overbooking is prevented even under concurrent requests
+- The event document stores an array of attendee user IDs.
+- RSVP requests use conditional queries to ensure:
+  - The user is not already in the attendee list.
+  - The current attendee count is less than the event capacity.
 
-### Concurrency Solution (Important)
+MongoDB's atomic update guarantees that only one request can succeed when
+capacity is nearly full, preventing race conditions.
 
-To prevent race conditions (e.g., multiple users trying to join the last available slot), an **atomic MongoDB update** is used:
+This ensures:
+- No duplicate RSVPs
+- No capacity overflow
+- Concurrency-safe event joining
 
-* `findOneAndUpdate()`
-* `$expr` with `$size` to check current attendees count
-* `$push` to add attendee in the same operation
+---
 
-This ensures that capacity validation and RSVP insertion happen in **one single atomic database operation**, making the system concurrency‑safe.
+## Image Upload & Media Handling
+
+* Event images are uploaded using **Multer**
+* Images are stored securely on **Cloudinary**
+* Images render correctly in production
+* Scalable and production-ready media handling
 
 ---
 
@@ -85,8 +98,8 @@ This ensures that capacity validation and RSVP insertion happen in **one single 
 
 * Fully responsive layout
 * Optimized for Desktop, Tablet, and Mobile screens
-* Event cards maintain consistent size
-* Images scale properly without distortion
+* Clean and user-friendly interface
+* Consistent event card layout and image scaling
 
 ---
 
@@ -108,21 +121,26 @@ This ensures that capacity validation and RSVP insertion happen in **one single 
 ## Project Structure
 
 ```
-root
- ├── client (React Frontend)
- │   ├── src
- │   │   ├── pages
- │   │   ├── components
- │   │   ├── styles
- │   │   └── services
- ├── server (Backend)
- │   ├── controllers
- │   ├── models
- │   ├── routes
- │   └── middleware
+mini-event-platform/
+├── client
+│ ├── src
+│ │ ├── components
+│ │ ├── pages
+│ │ ├── services
+│ │ └── context
+│ └── package.json
+│
+├── server
+│ ├── config
+│ ├── controllers
+│ ├── middleware
+│ ├── models
+│ ├── routes
+│ ├── server.js
+│ └── package.json
+│
+└── README.md
 ```
-
----
 
 ## Local Setup Instructions
 
@@ -143,8 +161,13 @@ npm run dev
 Create `.env` file:
 
 ```
-MONGO_URI=your_mongodb_uri
-JWT_SECRET=your_secret
+PORT=5000
+MONGO_URI=your_mongodb_connection_string
+JWT_SECRET=your_jwt_secret
+
+CLOUDINARY_CLOUD_NAME=your_cloudinary_cloud_name
+CLOUDINARY_API_KEY=your_cloudinary_api_key
+CLOUDINARY_API_SECRET=your_cloudinary_api_secret
 ```
 
 ### Frontend Setup
@@ -161,16 +184,21 @@ npm start
 
 * JWT Authentication
 * Event CRUD Operations
-* Image Upload
-* RSVP Join/Leave
+* Image Upload with Cloudinary
+* RSVP Join / Leave System
 * Capacity Enforcement
 * Concurrency‑safe backend logic
 * Responsive UI
 * Search & Filter
 * Dark Mode
+* Cloud Deployment (Vercel + Render)
+* MongoDB Atlas Integration
 
 ---
 
 ## Author
 
 Developed by **Sonu Kumar**
+Full Stack Developer Intern Candidate
+
+GitHub: https://github.com/Sonukumar-lab
