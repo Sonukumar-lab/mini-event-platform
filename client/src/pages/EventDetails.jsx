@@ -101,13 +101,31 @@ export default function EventDetails() {
   return (
     <div className="container event-detail-page">
       {/* IMAGE */}
-      {event.image && (
+      {event.image ? (
         <div className="detail-image-wrapper">
           <img
-            src={`http://localhost:5000${event.image}`}
+            src={
+              event.image.startsWith("http")
+                ? event.image
+                : null
+            }
             className="detail-img"
             alt={event.title}
           />
+        </div>
+      ) : (
+        <div
+          style={{
+            height: "350px",
+            background: "#eee",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            color: "#666",
+            fontSize: "14px",
+          }}
+        >
+          No Image Available
         </div>
       )}
 
