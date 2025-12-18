@@ -1,5 +1,6 @@
 const Event = require("../models/Event");
 const cloudinary = require("../config/cloudinary");
+const streamifier = require("streamifier");
 
 /* ================= CREATE EVENT ================= */
 exports.createEvent = async (req, res) => {
@@ -7,9 +8,20 @@ exports.createEvent = async (req, res) => {
     let imageUrl = null;
 
     if (req.file) {
-      const result = await cloudinary.uploader.upload(req.file.path, {
-        folder: "mini-event",
-      });
+      const uploadFromBuffer = () => {
+        return new Promise((resolve, reject) => {
+          const stream = cloudinary.uploader.upload_stream(
+            { folder: "mini-event" },
+            (error, result) => {
+              if (result) resolve(result);
+              else reject(error);
+            }
+          );
+          streamifier.createReadStream(req.file.buffer).pipe(stream);
+        });
+      };
+
+      const result = await uploadFromBuffer();
       imageUrl = result.secure_url;
     }
 
@@ -26,6 +38,7 @@ exports.createEvent = async (req, res) => {
     await event.save();
     res.status(201).json(event);
   } catch (err) {
+    console.error(err);
     res.status(500).json({ message: err.message });
   }
 };
@@ -36,6 +49,7 @@ exports.getEvents = async (req, res) => {
     const events = await Event.find()
       .sort({ createdAt: -1 })
       .populate("createdBy", "name");
+
     res.json(events);
   } catch (err) {
     res.status(500).json({ message: err.message });
@@ -61,9 +75,7 @@ exports.getEventById = async (req, res) => {
 exports.updateEvent = async (req, res) => {
   try {
     const event = await Event.findById(req.params.id);
-
-    if (!event)
-      return res.status(404).json({ message: "Event not found" });
+    if (!event) return res.status(404).json({ message: "Event not found" });
 
     if (event.createdBy.toString() !== req.user.id)
       return res.status(403).json({ message: "Unauthorized" });
@@ -71,9 +83,20 @@ exports.updateEvent = async (req, res) => {
     Object.assign(event, req.body);
 
     if (req.file) {
-      const result = await cloudinary.uploader.upload(req.file.path, {
-        folder: "mini-event",
-      });
+      const uploadFromBuffer = () => {
+        return new Promise((resolve, reject) => {
+          const stream = cloudinary.uploader.upload_stream(
+            { folder: "mini-event" },
+            (error, result) => {
+              if (result) resolve(result);
+              else reject(error);
+            }
+          );
+          streamifier.createReadStream(req.file.buffer).pipe(stream);
+        });
+      };
+
+      const result = await uploadFromBuffer();
       event.image = result.secure_url;
     }
 
@@ -88,9 +111,7 @@ exports.updateEvent = async (req, res) => {
 exports.deleteEvent = async (req, res) => {
   try {
     const event = await Event.findById(req.params.id);
-
-    if (!event)
-      return res.status(404).json({ message: "Event not found" });
+    if (!event) return res.status(404).json({ message: "Event not found" });
 
     if (event.createdBy.toString() !== req.user.id)
       return res.status(403).json({ message: "Unauthorized" });

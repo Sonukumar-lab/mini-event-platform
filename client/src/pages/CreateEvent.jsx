@@ -7,7 +7,7 @@ export default function CreateEvent() {
     description: "",
     location: "",
     capacity: "",
-    date: "",          
+    date: "",
     image: null,
   });
 
@@ -21,7 +21,11 @@ export default function CreateEvent() {
       }
     });
 
-    await api.post("/events", fd);
+    await api.post("/events", fd, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
     alert("Event Created");
   };
 
