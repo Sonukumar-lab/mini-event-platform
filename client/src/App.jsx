@@ -5,6 +5,7 @@ import { AuthContext } from "./context/AuthContext";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 
+import Home from "./pages/Home";          // ✅ NEW HOME
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
@@ -15,7 +16,7 @@ import EditEvent from "./pages/EditEvent";
 export default function App() {
   const { user } = useContext(AuthContext);
 
-  /*  DARK MODE STATE */
+  /* DARK MODE STATE */
   const [dark, setDark] = useState(
     localStorage.getItem("theme") === "dark"
   );
@@ -35,21 +36,29 @@ export default function App() {
       <Navbar dark={dark} setDark={setDark} />
 
       <Routes>
-        {!user ? (
+        {/* ================= PUBLIC ROUTES ================= */}
+        <Route path="/" element={<Home />} />
+        <Route
+          path="/login"
+          element={!user ? <Login /> : <Navigate to="/dashboard" />}
+        />
+        <Route
+          path="/register"
+          element={!user ? <Register /> : <Navigate to="/dashboard" />}
+        />
+
+        {/* ================= PROTECTED ROUTES ================= */}
+        {user && (
           <>
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="*" element={<Navigate to="/login" />} />
-          </>
-        ) : (
-          <>
-            <Route path="/" element={<Dashboard />} />
+            <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/create" element={<CreateEvent />} />
             <Route path="/event/:id" element={<EventDetails />} />
             <Route path="/events/edit/:id" element={<EditEvent />} />
-            <Route path="*" element={<Navigate to="/" />} />
           </>
         )}
+
+        {/* ================= FALLBACK ================= */}
+        <Route path="*" element={<Navigate to="/" />} />
       </Routes>
 
       <Footer />

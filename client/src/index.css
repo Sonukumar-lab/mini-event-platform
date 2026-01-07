@@ -1,3 +1,101 @@
+/* ================= HOME PAGE ================= */
+
+.home-wrapper {
+  width: 100%;
+}
+
+/* HERO */
+.home-hero {
+  background: linear-gradient(135deg, #7873b4, #9e9fd9);
+  color: white;
+  padding: 80px 20px;
+  text-align: center;
+}
+
+.home-hero-content {
+  max-width: 900px;
+  margin: auto;
+}
+
+.home-hero h1 {
+  font-size: 42px;
+  font-weight: 700;
+  margin-bottom: 20px;
+}
+
+.home-hero h1 span {
+  color: #fde68a;
+}
+
+.home-hero p {
+  font-size: 18px;
+  opacity: 0.95;
+  margin-bottom: 30px;
+}
+
+.home-hero-actions {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+/* FEATURES */
+.home-features {
+  max-width: 1100px;
+  margin: 70px auto;
+  padding: 0 20px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 25px;
+}
+
+.feature-card {
+  background: #fff;
+  padding: 30px;
+  border-radius: 14px;
+  text-align: center;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+  transition: transform 0.25s ease;
+}
+
+.feature-card:hover {
+  transform: translateY(-6px);
+}
+
+.feature-icon {
+  font-size: 40px;
+  margin-bottom: 15px;
+}
+
+.feature-card h3 {
+  font-size: 20px;
+  margin-bottom: 10px;
+}
+
+.feature-card p {
+  color: #555;
+  font-size: 15px;
+}
+
+/* CTA */
+.home-cta {
+  background: #f9fafb;
+  text-align: center;
+  padding: 70px 20px;
+}
+
+.home-cta h2 {
+  font-size: 30px;
+  margin-bottom: 15px;
+}
+
+.home-cta p {
+  max-width: 600px;
+  margin: 0 auto 25px;
+  color: #555;
+}
+
 /* =====================
    GLOBAL RESET
 ===================== */
@@ -772,3 +870,4 @@ body.dark .theme-toggle {
   background: #1e293b;
   color: #f8fafc;
 }
+

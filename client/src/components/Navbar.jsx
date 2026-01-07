@@ -22,7 +22,7 @@ export default function Navbar({ dark, setDark }) {
 
           {user ? (
             <>
-              <Link to="/" className="nav-link">Events</Link>
+              <Link to="/dashboard" className="nav-link">Events</Link>
               <Link to="/create" className="btn-primary">
                 Create Event
               </Link>
